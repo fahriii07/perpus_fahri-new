@@ -1,18 +1,19 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 class Auth extends CI_Controller {
 
     // ================= HALAMAN LOGIN =================
-    function index(){
-        $this->load->view('login'); // WAJIB ADA
+    public function index(){
+        $this->load->view('login');
     }
 
     // ================= LOGIN =================
-    function login(){
+    public function login(){
 
-        $username = $this->input->post('username');
+        $username = trim($this->input->post('username'));
         $password = $this->input->post('password');
 
-        // VALIDASI
         if(empty($username) || empty($password)){
             $this->session->set_flashdata('error','Username & Password wajib diisi!');
             redirect('index.php/auth');
@@ -22,54 +23,70 @@ class Auth extends CI_Controller {
             'username' => $username
         ])->row();
 
-        if($user){
+        if(!$user){
+            $this->session->set_flashdata('error','Username tidak ditemukan!');
+            redirect('index.php/auth');
+        }
 
-            if($user->password == md5($password)){
+        $login_valid = false;
 
-                $this->session->set_userdata([
-                    'id'   => $user->id,
-                    'nama' => $user->nama,
-                    'role' => $user->role
-                ]);
+        // ================= PASSWORD HASH MODERN =================
+        if(password_verify($password, $user->password)){
+            $login_valid = true;
+        }
 
-                $this->session->set_flashdata('success','Login berhasil!');
+        // ================= MIGRASI DARI MD5 LAMA =================
+        elseif($user->password == md5($password)){
 
-                if($user->role == 'admin'){
-                    redirect('index.php/admin');
-                } else {
-                    redirect('index.php/user');
-                }
+            $hashBaru = password_hash($password, PASSWORD_DEFAULT);
 
-            } else {
-                $this->session->set_flashdata('error','Password salah!');
-                redirect('index.php/auth');
+            $this->db->where('id', $user->id);
+            $this->db->update('users', [
+                'password' => $hashBaru
+            ]);
+
+            $login_valid = true;
+        }
+
+        if($login_valid){
+
+            $this->session->set_userdata([
+                'id'   => $user->id,
+                'nama' => $user->nama,
+                'role' => $user->role
+            ]);
+
+            $this->session->set_flashdata('success','Login berhasil!');
+
+            if($user->role == 'admin'){
+                redirect('index.php/admin');
+            }else{
+                redirect('index.php/user');
             }
 
-        } else {
-            $this->session->set_flashdata('error','Username tidak ditemukan!');
+        }else{
+            $this->session->set_flashdata('error','Password salah!');
             redirect('index.php/auth');
         }
     }
 
     // ================= HALAMAN REGISTER =================
-    function register(){
+    public function register(){
         $this->load->view('register');
     }
 
     // ================= PROSES REGISTER =================
-    function proses_register(){
+    public function proses_register(){
 
-        $nama     = $this->input->post('nama');
-        $username = $this->input->post('username');
+        $nama     = trim($this->input->post('nama'));
+        $username = trim($this->input->post('username'));
         $password = $this->input->post('password');
 
-        // VALIDASI
         if(empty($nama) || empty($username) || empty($password)){
             $this->session->set_flashdata('error','Semua field wajib diisi!');
             redirect('index.php/auth/register');
         }
 
-        // CEK USERNAME
         $cek = $this->db->get_where('users', [
             'username' => $username
         ])->row();
@@ -79,28 +96,76 @@ class Auth extends CI_Controller {
             redirect('index.php/auth/register');
         }
 
-        // SIMPAN
+        // ================= HASH PASSWORD =================
+        $hashPassword = password_hash($password, PASSWORD_DEFAULT);
+
         $data = [
-        'nama'     => $this->input->post('nama'),
-        'username' => $this->input->post('username'),
-        'password' => md5($this->input->post('password')),
-        'role'     => 'user',
+            'nama'     => $nama,
+            'username' => $username,
+            'password' => $hashPassword,
+            'role'     => 'user',
+            'kelas'    => $this->input->post('kelas'),
+            'jurusan'  => $this->input->post('jurusan'),
+            'kontak'   => $this->input->post('kontak'),
+            'alamat'   => $this->input->post('alamat')
+        ];
 
-        // 🔥 INI YANG KEMARIN BELUM MASUK
-        'kelas'    => $this->input->post('kelas'),
-        'jurusan'  => $this->input->post('jurusan'),
-        'kontak'   => $this->input->post('kontak'),
-        'alamat'   => $this->input->post('alamat')
-    ];
+        $this->db->insert('users', $data);
 
-    $this->db->insert('users', $data);
+        $this->session->set_flashdata('success','Register berhasil! Silakan login.');
+        redirect('index.php/auth');
+    }
 
-    $this->session->set_flashdata('success','Register berhasil!');
-    redirect('index.php/auth');
-}
+    // ================= GANTI PASSWORD =================
+    public function ganti_password(){
+
+        $id       = $this->session->userdata('id');
+        $lama     = $this->input->post('password_lama');
+        $baru     = $this->input->post('password_baru');
+        $konfirm  = $this->input->post('konfirmasi_password');
+
+        if(!$id){
+            redirect('index.php/auth');
+        }
+
+        if(empty($lama) || empty($baru) || empty($konfirm)){
+            $this->session->set_flashdata('error','Semua field password wajib diisi!');
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+
+        if($baru != $konfirm){
+            $this->session->set_flashdata('error','Konfirmasi password tidak cocok!');
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+
+        $user = $this->db->get_where('users', ['id'=>$id])->row();
+
+        $valid = false;
+
+        if(password_verify($lama, $user->password)){
+            $valid = true;
+        }elseif($user->password == md5($lama)){
+            $valid = true;
+        }
+
+        if(!$valid){
+            $this->session->set_flashdata('error','Password lama salah!');
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+
+        $hashBaru = password_hash($baru, PASSWORD_DEFAULT);
+
+        $this->db->where('id',$id);
+        $this->db->update('users', [
+            'password' => $hashBaru
+        ]);
+
+        $this->session->set_flashdata('success','Password berhasil diubah!');
+        redirect($_SERVER['HTTP_REFERER']);
+    }
 
     // ================= LOGOUT =================
-    function logout(){
+    public function logout(){
         $this->session->sess_destroy();
         redirect('index.php/auth');
     }

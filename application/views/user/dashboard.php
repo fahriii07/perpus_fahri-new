@@ -77,38 +77,31 @@
         font-size: 1.5rem;
     }
 
-    /* Quick Menu */
-    .menu-item {
-        text-align: center;
-        padding: 30px 15px;
-        border-radius: 25px;
+    /* Action Buttons (Cetak Kartu) */
+    .action-card {
         background: var(--bg-card);
+        border-radius: 25px;
         border: 1px solid var(--border-color);
-        transition: all 0.3s ease;
-        display: block;
+        padding: 25px;
+        text-align: center;
+        transition: 0.3s;
         text-decoration: none !important;
+        display: block;
     }
 
-    .menu-item:hover {
-        background: var(--accent-purple);
-        transform: translateY(-5px);
+    .action-card:hover {
+        background: var(--accent-neon);
+        transform: scale(1.02);
     }
 
-    .menu-item i {
-        font-size: 2.2rem;
+    .action-card:hover h5, .action-card:hover i {
+        color: white !important;
+    }
+
+    .action-card i {
+        font-size: 2.5rem;
         color: var(--accent-neon);
         margin-bottom: 15px;
-        transition: 0.3s;
-    }
-
-    .menu-item span {
-        display: block;
-        font-weight: 600;
-        color: var(--text-main);
-    }
-
-    .menu-item:hover i, .menu-item:hover span {
-        color: white !important;
     }
 
     /* Operational Card */
@@ -134,103 +127,112 @@
     <section class="content">
         <div class="container-fluid">
 
+            <!-- ================= WELCOME ================= -->
             <div class="card welcome-banner mb-5">
                 <div class="card-body p-0">
                     <div class="row align-items-center">
                         <div class="col-md-8 position-relative" style="z-index: 2;">
-                            <h2 class="display-5 mb-3">Hello, <?= $this->session->userdata('nama') ?>! 🚀</h2>
-                            <p class="lead" style="opacity: 0.9;">Sistem siap. Koleksi buku digital dan fisik tersedia untuk kamu jelajahi hari ini.</p>
+                            <h2 class="display-5 mb-3">
+                                Hello, <?= $this->session->userdata('nama') ?>! 🚀
+                            </h2>
+                            <p class="lead" style="opacity: 0.9;">
+                                Sistem siap. Koleksi buku digital dan fisik tersedia untuk kamu jelajahi hari ini.
+                            </p>
                         </div>
                     </div>
-                    <i class="fas fa-user-astronaut fa-10x" style="position: absolute; right: 20px; bottom: -20px; color: rgba(255,255,255,0.15); transform: rotate(15deg);"></i>
+                    <i class="fas fa-user-astronaut fa-10x"
+                       style="position: absolute; right: 20px; bottom: -20px; color: rgba(255,255,255,0.15); transform: rotate(15deg);"></i>
                 </div>
             </div>
 
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <div class="card stat-card">
-                        <div class="card-body d-flex align-items-center p-4">
-                            <div class="icon-box mr-4" style="background: rgba(14, 165, 233, 0.1); color: var(--accent-neon);">
-                                <i class="fas fa-book-open"></i>
-                            </div>
-                            <div>
-                                <h6 class="text-muted mb-1 small text-uppercase font-weight-bold">Pinjaman Aktif</h6>
-                                <h4 class="font-weight-bold mb-0">3 <span class="small opacity-50">Buku</span></h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <!-- ================= STAT ================= -->
+           <div class="row mb-4 justify-content-center">
 
-                <div class="col-md-6">
-                    <div class="card stat-card">
-                        <div class="card-body d-flex align-items-center p-4">
-                            <div class="icon-box mr-4" style="background: rgba(139, 92, 246, 0.1); color: var(--accent-purple);">
-                                <i class="fas fa-bolt"></i>
-                            </div>
-                            <div>
-                                <h6 class="text-muted mb-1 small text-uppercase font-weight-bold">Level Literasi</h6>
-                                <h4 class="font-weight-bold mb-0">Elite <span class="small opacity-50">(1,250 XP)</span></h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="col-md-5 mb-3">
+    <div class="card stat-card h-100">
+        <div class="card-body d-flex align-items-center p-4">
+            <div class="icon-box mr-4"
+                 style="background: rgba(14,165,233,0.1); color: var(--accent-neon);">
+                <i class="fas fa-book-open"></i>
             </div>
-
-            <h5 class="mb-4 font-weight-bold mt-5 text-uppercase" style="letter-spacing: 2px; font-size: 0.8rem;">
-                <i class="fas fa-terminal mr-2" style="color: var(--accent-neon);"></i> Quick Access
-            </h5>
-            
-            <div class="row mb-5">
-                <div class="col-6 col-md-3">
-                    <a href="<?= base_url('index.php/user/buku') ?>" class="menu-item">
-                        <i class="fas fa-shapes"></i>
-                        <span>KATALOG</span>
-                    </a>
-                </div>
-                <div class="col-6 col-md-3">
-                    <a href="<?= base_url('index.php/user/riwayat') ?>" class="menu-item">
-                        <i class="fas fa-satellite-dish"></i>
-                        <span>RIWAYAT</span>
-                    </a>
-                </div>
-                <div class="col-6 col-md-3">
-                    <a href="#" class="menu-item">
-                        <i class="fas fa-user-shield"></i>
-                        <span>PROFIL</span>
-                    </a>
-                </div>
-                <div class="col-6 col-md-3">
-                    <a href="<?= base_url('index.php/auth/logout') ?>" class="menu-item">
-                        <i class="fas fa-power-off" style="color: #ef4444;"></i>
-                        <span style="color: #ef4444;">LOGOUT</span>
-                    </a>
-                </div>
+            <div>
+                <h6 class="text-muted mb-1 small text-uppercase font-weight-bold">
+                    Pinjaman Aktif
+                </h6>
+                <h4 class="font-weight-bold mb-0">
+                    3 <span class="small opacity-50">Buku</span>
+                </h4>
             </div>
+        </div>
+    </div>
+</div>
 
+<div class="col-md-5 mb-3">
+    <div class="card stat-card h-100">
+        <div class="card-body d-flex align-items-center p-4">
+            <div class="icon-box mr-4"
+                 style="background: rgba(139,92,246,0.1); color: var(--accent-purple);">
+                <i class="fas fa-bolt"></i>
+            </div>
+            <div>
+                <h6 class="text-muted mb-1 small text-uppercase font-weight-bold">
+                    Level Literasi
+                </h6>
+                <h4 class="font-weight-bold mb-0">
+                    Elite <span class="small opacity-50">(1,250 XP)</span>
+                </h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+            <!-- ================= OPERATIONAL ================= -->
             <div class="row">
                 <div class="col-md-12">
                     <div class="card op-card mb-5">
                         <div class="card-body p-4">
+
                             <div class="d-flex align-items-center mb-4">
-                                <div class="bg-primary p-3 rounded-circle mr-3" style="background: var(--accent-neon) !important;">
-                                    <i class="fas fa-hourglass-half" style="color: white;"></i>
+                                <div class="bg-primary p-3 rounded-circle mr-3"
+                                     style="background: var(--accent-neon) !important;">
+                                    <i class="fas fa-hourglass-half text-white"></i>
                                 </div>
-                                <h5 class="font-weight-bold mb-0">Operational Status</h5>
+                                <h5 class="font-weight-bold mb-0">
+                                    Operational Status
+                                </h5>
                             </div>
+
                             <div class="row text-center py-2">
+
                                 <div class="col-md-4 border-right-custom">
-                                    <p class="mb-1 text-muted small text-uppercase">Mon — Thu</p>
-                                    <h5 class="font-weight-bold">07:30 — 15:30</h5>
+                                    <p class="mb-1 text-muted small text-uppercase">
+                                        Mon — Thu
+                                    </p>
+                                    <h5 class="font-weight-bold">
+                                        07:30 — 15:30
+                                    </h5>
                                 </div>
+
                                 <div class="col-md-4 border-right-custom">
-                                    <p class="mb-1 text-muted small text-uppercase">Friday</p>
-                                    <h5 class="font-weight-bold">07:30 — 11:30</h5>
+                                    <p class="mb-1 text-muted small text-uppercase">
+                                        Friday
+                                    </p>
+                                    <h5 class="font-weight-bold">
+                                        07:30 — 11:30
+                                    </h5>
                                 </div>
+
                                 <div class="col-md-4">
-                                    <p class="mb-1 text-muted small text-uppercase">Weekend</p>
-                                    <h5 class="text-danger font-weight-bold">OFFLINE</h5>
+                                    <p class="mb-1 text-muted small text-uppercase">
+                                        Weekend
+                                    </p>
+                                    <h5 class="text-danger font-weight-bold">
+                                        OFFLINE
+                                    </h5>
                                 </div>
+
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -238,6 +240,7 @@
 
         </div>
     </section>
+</div>
 </div>
 
 <?php $this->load->view('templates/footer'); ?>

@@ -146,85 +146,109 @@
         color: var(--text-muted); 
     }
 
-    //* ================= BUTTON MODERN (UPGRADE) ================= */
+    /* ================= BUTTON MODERN (UPGRADE) ================= */
 
-/* Base Button */
-.btn-primary-modern,
-.btn-reset-modern,
-.btn-export-modern {
-    border-radius: 12px;
-    padding: 10px 18px;
-    font-weight: 600;
-    transition: all 0.25s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    border: 1px solid transparent;
-    position: relative;
-    overflow: hidden;
-}
+    /* Base Button */
+    .btn-primary-modern,
+    .btn-reset-modern,
+    .btn-export-modern {
+        border-radius: 12px;
+        padding: 10px 18px;
+        font-weight: 600;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
 
-/* ICON */
-.btn i {
-    font-size: 14px;
-}
+    /* ICON */
+    .btn i {
+        font-size: 14px;
+    }
 
-/* ================= FILTER ================= */
-.btn-primary-modern {
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
-    color: #fff;
-}
+    /* ================= FILTER ================= */
+    .btn-primary-modern {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: #fff;
+    }
 
-.btn-primary-modern:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(99, 102, 241, 0.4);
-}
+    .btn-primary-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(99, 102, 241, 0.4);
+    }
 
-/* ================= RESET ================= */
-.btn-reset-modern {
-    background: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
-}
+    /* ================= RESET ================= */
+    .btn-reset-modern {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-muted);
+    }
 
-.btn-reset-modern:hover {
-    background: var(--table-header);
-    color: var(--text-main);
-    border-color: var(--accent);
-}
+    .btn-reset-modern:hover {
+        background: var(--table-header);
+        color: var(--text-main);
+        border-color: var(--accent);
+    }
 
-/* ================= EXPORT ================= */
-.btn-export-modern {
-    background: linear-gradient(135deg, #22c55e, #16a34a);
-    color: #fff;
-}
+    /* ================= EXPORT ================= */
+    .btn-export-modern {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: #fff;
+    }
 
-.btn-export-modern:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(34, 197, 94, 0.4);
-}
+    .btn-export-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(34, 197, 94, 0.4);
+    }
 
-/* ================= DARK MODE ENHANCEMENT ================= */
-body.dark-mode .btn-reset-modern {
-    background: transparent;
-    border: 1px solid #415e86;
-    color: #94a3b8;
-}
+    /* ================= PDF BUTTON ================= */
+    .btn-export-pdf {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: #fff;
+        border-radius: 12px;
+        padding: 10px 18px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        transition: all 0.25s ease;
+    }
 
-body.dark-mode .btn-reset-modern:hover {
-    background: #ff0000;
-    color: #f1f5f9;
-    border-color: #6366f1;
-}
+    .btn-export-pdf:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(239, 68, 68, 0.4);
+    }
 
-/* Glow effect biar keliatan di dark */
-body.dark-mode .btn-primary-modern:hover {
-    box-shadow: 0 0 12px rgba(99, 102, 241, 0.7);
-}
+    /* Dark mode glow */
+    body.dark-mode .btn-export-pdf:hover {
+        box-shadow: 0 0 12px rgba(239, 68, 68, 0.7);
+    }
 
-body.dark-mode .btn-export-modern:hover {
-    box-shadow: 0 0 12px rgba(34, 197, 94, 0.7);
-}
+    /* ================= DARK MODE ENHANCEMENT ================= */
+    body.dark-mode .btn-reset-modern {
+        background: transparent;
+        border: 1px solid #415e86;
+        color: #94a3b8;
+    }
+
+    body.dark-mode .btn-reset-modern:hover {
+        background: #ff0000;
+        color: #f1f5f9;
+        border-color: #6366f1;
+    }
+
+    /* Glow effect biar keliatan di dark */
+    body.dark-mode .btn-primary-modern:hover {
+        box-shadow: 0 0 12px rgba(99, 102, 241, 0.7);
+    }
+
+    body.dark-mode .btn-export-modern:hover {
+        box-shadow: 0 0 12px rgba(34, 197, 94, 0.7);
+    }
 </style>
 
 <div class="content-wrapper">
@@ -237,34 +261,81 @@ body.dark-mode .btn-export-modern:hover {
                 </div>
             </div>
 
-            <<div class="card filter-card shadow-sm mb-4">
+           <div class="card filter-card shadow-sm mb-4">
     <div class="card-body">
+
         <form method="get" action="<?= base_url('index.php/laporan') ?>">
             <div class="row align-items-end">
+
+                <!-- FILTER TANGGAL LAMA -->
                 <div class="col-md-3">
                     <label class="filter-label">Tanggal Awal</label>
-                    <input type="date" name="tgl_awal" value="<?= $tgl_awal ?>" class="form-control form-control-custom shadow-none">
+                    <input type="date" name="tgl_awal"
+                        value="<?= $tgl_awal ?>"
+                        class="form-control form-control-custom shadow-none">
                 </div>
+
                 <div class="col-md-3">
                     <label class="filter-label">Tanggal Akhir</label>
-                    <input type="date" name="tgl_akhir" value="<?= $tgl_akhir ?>" class="form-control form-control-custom shadow-none">
+                    <input type="date" name="tgl_akhir"
+                        value="<?= $tgl_akhir ?>"
+                        class="form-control form-control-custom shadow-none">
                 </div>
-                <div class="col-md-6 d-flex flex-wrap justify-content-md-end mt-3 mt-md-0" style="gap: 10px;">
-                    <button type="submit" class="btn btn-primary-modern shadow-sm">
-                        <i class="fas fa-filter"></i> Filter
-                    </button>
-                    <a href="<?= base_url('index.php/laporan') ?>" class="btn btn-reset-modern">
-                        <i class="fas fa-undo"></i> Reset
-                    </a>
-                    <a href="<?= base_url('index.php/laporan?export=excel&tgl_awal='.$tgl_awal.'&tgl_akhir='.$tgl_akhir) ?>" 
-                       class="btn btn-export-modern shadow-sm" target="_blank">
-                        <i class="fas fa-file-excel"></i> Export Excel
-                    </a>
-                </div>
-            </div>
-        </form>
+
+               <!-- BUTTON FILTER -->
+<div class="col-md-6 d-flex flex-wrap justify-content-md-end mt-3 mt-md-0" style="gap: 10px;">
+
+    <button type="submit" class="btn btn-primary-modern shadow-sm">
+        <i class="fas fa-filter"></i> Filter
+    </button>
+
+    <a href="<?= base_url('index.php/laporan') ?>" class="btn btn-reset-modern">
+        <i class="fas fa-undo"></i> Reset
+    </a>
+
+    <!-- ================= EXPORT PDF FIX (NO DROPDOWN JS) ================= -->
+    <div class="btn-group">
+
+        <a href="<?= base_url('index.php/laporan/export_pdf?jenis=harian') ?>"
+           target="_blank"
+           class="btn btn-export-pdf shadow-sm">
+            <i class="fas fa-file-pdf"></i> Harian
+        </a>
+
+        <a href="<?= base_url('index.php/laporan/export_pdf?jenis=bulanan') ?>"
+           target="_blank"
+           class="btn btn-export-pdf shadow-sm"
+           style="margin-left:5px;">
+            <i class="fas fa-file-pdf"></i> Bulanan
+        </a>
+
+        <a href="<?= base_url('index.php/laporan/export_pdf?jenis=tahunan') ?>"
+           target="_blank"
+           class="btn btn-export-pdf shadow-sm"
+           style="margin-left:5px;">
+            <i class="fas fa-file-pdf"></i> Tahunan
+        </a>
+
     </div>
+
 </div>
+
+<script>
+function togglePdfMenu() {
+    let menu = document.getElementById("pdfMenu");
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+
+// klik luar untuk tutup menu
+document.addEventListener("click", function(e) {
+    let menu = document.getElementById("pdfMenu");
+    let btn = document.querySelector(".btn-export-pdf");
+
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.style.display = "none";
+    }
+});
+</script>
 
             <div class="card card-table-container shadow-sm">
                 <div class="card-body p-0">

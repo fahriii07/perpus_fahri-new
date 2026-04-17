@@ -125,14 +125,6 @@
         color: white;
     }
 
-    /* 6. Info Box & Status */
-    .info-box-status {
-        background: var(--info-box-bg);
-        border-radius: 12px;
-        padding: 20px;
-        border-left: 4px solid var(--info-box-border);
-    }
-
     hr {
         border-top: 1px solid var(--input-border);
     }
@@ -213,17 +205,6 @@
                                 <div class="mb-4">
                                     <label class="form-label">Alamat Lengkap</label>
                                     <textarea name="alamat" class="form-control" rows="3" placeholder="Masukkan alamat lengkap..."><?= $anggota->alamat ?></textarea>
-                                </div>
-
-                                <div class="info-box-status mb-4">
-                                    <div class="d-flex align-items-start">
-                                        <i class="fas fa-shield-alt text-info mr-3 mt-1" style="font-size: 1.5rem;"></i>
-                                        <div class="w-100">
-                                            <label class="form-label mb-0">Password Baru (Opsional)</label>
-                                            <p class="text-muted small mb-2">Kosongkan jika tidak ingin mengganti password.</p>
-                                            <input type="password" name="password" class="form-control" placeholder="Masukkan password baru">
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <hr class="my-4">

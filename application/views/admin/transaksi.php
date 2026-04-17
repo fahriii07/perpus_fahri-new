@@ -233,23 +233,30 @@
                                                 Rp <?= number_format($t->denda) ?>
                                             </span>
                                         </td>
-                                        <td class="text-center">
-                                            <div class="d-flex justify-content-center" style="gap: 8px;">
-                                                <?php if($t->status == 'pinjam'){ ?>
-                                                    <a href="<?= base_url('index.php/admin/kembalikan/'.$t->id) ?>" 
-                                                       class="btn-action btn-kembali-modern" 
-                                                       onclick="return confirm('Proses pengembalian buku ini?')"
-                                                       title="Kembalikan Buku"><i class="fas fa-undo"></i></a>
-                                                <?php } ?>
+                                       <td class="text-center">
+                                         <div class="d-flex justify-content-center" style="gap: 8px;">
+                                         <?php if($t->status == 'pinjam'){ ?>
+                                          <a href="<?= base_url('index.php/admin/proses_kembali/'.$t->id) ?>" 
+                                             class="btn-action btn-kembali-modern" 
+                                            onclick="confirmReturn(event, this.href)"
+                                              title="Proses Pengembalian">
+                                              <i class="fas fa-undo-alt"></i>
+                                             <small class="font-weight-bold">Kembalikan</small>
+                                            </a>
+                                          <?php } ?>
 
-                                                <a href="<?= base_url('index.php/admin/detail/'.$t->id) ?>" 
-                                                   class="btn-action btn-detail-modern" title="Detail"><i class="fas fa-eye"></i></a>
+        <a href="<?= base_url('index.php/admin/detail/'.$t->id) ?>" 
+           class="btn-action btn-detail-modern" title="Detail">
+           <i class="fas fa-eye"></i>
+        </a>
 
-                                                <a href="<?= base_url('index.php/admin/hapus_transaksi/'.$t->id) ?>" 
-                                                   class="btn-action btn-delete-modern"
-                                                   onclick="confirmDelete(event, this.href)" title="Hapus"><i class="fas fa-trash-alt"></i></a>
-                                            </div>
-                                        </td>
+        <a href="<?= base_url('index.php/admin/hapus_transaksi/'.$t->id) ?>" 
+           class="btn-action btn-delete-modern"
+           onclick="confirmDelete(event, this.href)" title="Hapus">
+           <i class="fas fa-trash-alt"></i>
+        </a>
+    </div>
+</td>
                                     </tr>
                                 <?php } ?>
 

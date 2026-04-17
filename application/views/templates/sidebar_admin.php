@@ -1,11 +1,10 @@
 <style>
     /* Upgrade Sidebar Container */
     .main-sidebar {
-        background: #1e1e2d !important; /* Warna Navy Deep yang modern */
+        background: #1e1e2d !important;
         transition: all 0.3s ease;
     }
 
-    /* Brand Link (Logo Section) */
     .brand-link {
         border-bottom: 1px solid rgba(255,255,255,0.05) !important;
         padding: 20px 15px !important;
@@ -20,23 +19,21 @@
         font-size: 1.1rem;
     }
 
-    /* Nav Item Styling */
     .nav-sidebar .nav-item {
-        margin: 5px 12px; /* Memberikan ruang antar item */
+        margin: 5px 12px;
     }
 
     .nav-sidebar .nav-link {
-        border-radius: 12px !important; /* Membuat sudut membulat */
+        border-radius: 12px !important;
         padding: 12px 15px !important;
         transition: all 0.3s ease;
-        color: #a2a3b7 !important; /* Warna teks default yang soft */
+        color: #a2a3b7 !important;
     }
 
-    /* Hover & Active State */
     .nav-sidebar .nav-link:hover {
         background: rgba(255,255,255,0.05) !important;
         color: #ffffff !important;
-        transform: translateX(5px); /* Efek geser saat hover */
+        transform: translateX(5px);
     }
 
     .nav-sidebar .nav-item.menu-open > .nav-link, 
@@ -46,7 +43,6 @@
         box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
     }
 
-    /* Icon Styling */
     .nav-icon {
         margin-right: 12px !important;
         font-size: 1.1rem !important;
@@ -59,7 +55,6 @@
         transform: scale(1.2);
     }
 
-    /* Khusus Tombol Logout */
     .nav-logout {
         margin-top: 30px !important;
         border: 1px solid rgba(255, 75, 75, 0.2) !important;
@@ -70,7 +65,6 @@
         color: #ff4b4b !important;
     }
 
-    /* Sidebar User Info (Optional addition) */
     .sidebar-divider {
         height: 1px;
         background: rgba(255,255,255,0.05);
@@ -85,6 +79,8 @@
     </a>
 
     <div class="sidebar">
+
+        <!-- USER INFO -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center px-3">
             <div class="image">
                 <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
@@ -98,42 +94,49 @@
         </div>
 
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview">
 
+                <!-- MAIN -->
                 <li class="nav-header small text-uppercase text-muted px-4 mb-2">Main Menu</li>
 
                 <li class="nav-item">
-                    <a href="<?= base_url('index.php/admin') ?>" class="nav-link <?= ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == '') ? 'active' : '' ?>">
+                    <a href="<?= base_url('index.php/admin') ?>" 
+                       class="nav-link <?= ($this->uri->segment(1) == 'admin' && $this->uri->segment(2) == '') ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-th-large"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="<?= base_url('index.php/anggota') ?>" class="nav-link <?= ($this->uri->segment(1) == 'anggota') ? 'active' : '' ?>">
+                    <a href="<?= base_url('index.php/anggota') ?>" 
+                       class="nav-link <?= ($this->uri->segment(1) == 'anggota') ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-user-friends"></i>
                         <p>Kelola Anggota</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="<?= base_url('index.php/buku') ?>" class="nav-link <?= ($this->uri->segment(1) == 'buku') ? 'active' : '' ?>">
+                    <a href="<?= base_url('index.php/buku') ?>" 
+                       class="nav-link <?= ($this->uri->segment(1) == 'buku') ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-book-reader"></i>
                         <p>Kelola Buku</p>
                     </a>
                 </li>
 
+                <!-- ACTIVITIES -->
                 <li class="nav-header small text-uppercase text-muted px-4 mt-3 mb-2">Activities</li>
 
                 <li class="nav-item">
-                    <a href="<?= base_url('index.php/admin/transaksi') ?>" class="nav-link <?= ($this->uri->segment(2) == 'transaksi') ? 'active' : '' ?>">
+                    <a href="<?= base_url('index.php/admin/transaksi') ?>" 
+                       class="nav-link <?= ($this->uri->segment(2) == 'transaksi' && $this->uri->segment(3) == '') ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-exchange-alt"></i>
                         <p>Kelola Transaksi</p>
                     </a>
                 </li>
-
+                
                 <li class="nav-item">
-                    <a href="<?= base_url('index.php/laporan') ?>" class="nav-link <?= ($this->uri->segment(1) == 'laporan') ? 'active' : '' ?>">
+                    <a href="<?= base_url('index.php/laporan') ?>" 
+                       class="nav-link <?= ($this->uri->segment(1) == 'laporan') ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-chart-pie"></i>
                         <p>Laporan</p>
                     </a>
@@ -141,6 +144,7 @@
 
                 <div class="sidebar-divider"></div>
 
+                <!-- LOGOUT -->
                 <li class="nav-item">
                     <a href="<?= base_url('index.php/auth/logout') ?>" class="nav-link nav-logout">
                         <i class="nav-icon fas fa-power-off"></i>
@@ -150,5 +154,6 @@
 
             </ul>
         </nav>
+
     </div>
 </aside>

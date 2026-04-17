@@ -4,101 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premium Login | EFWAY</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --bg-dark: #05070a;
             --accent-neon: #00f2ff;
             --accent-purple: #7000ff;
-            --glass: rgba(15, 23, 42, 0.7);
+            --glass: rgba(15, 23, 42, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         body, html {
             height: 100%;
             margin: 0;
-            font-family: 'Space Grotesk', sans-serif;
             background-color: var(--bg-dark);
             overflow: hidden;
+            color: #fff;
         }
 
-        /* ===== TAMBAHAN BACKGROUND GRID ===== */
+        /* ================= BACKGROUND ================= */
         .grid-bg {
             position: fixed;
-            width: 100%;
-            height: 100%;
+            width: 200%;
+            height: 200%;
             background-image: 
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
+                linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg);
+            animation: moveGrid 15s linear infinite;
             z-index: -3;
-            animation: moveGrid 20s linear infinite;
         }
 
         @keyframes moveGrid {
-            from { transform: translateY(0); }
-            to { transform: translateY(40px); }
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
         }
 
-        /* ===== TAMBAHAN PARTICLES ===== */
-        .particles {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -2;
-        }
-
+        /* ================= PARTICLES ================= */
         .particles span {
             position: absolute;
-            background: rgba(0, 242, 255, 0.8);
+            width: 3px;
+            height: 3px;
+            background: var(--accent-neon);
             border-radius: 50%;
-            animation: animateParticles linear infinite;
-            box-shadow: 0 0 10px rgba(0, 242, 255, 0.7);
+            animation: moveUp linear infinite;
         }
 
-        @keyframes animateParticles {
-            0% {
-                transform: translateY(100vh) scale(0);
-                opacity: 0;
-            }
-            10% { opacity: 1; }
-            100% {
-                transform: translateY(-10vh) scale(1);
-                opacity: 0;
-            }
+        @keyframes moveUp {
+            0% { transform: translateY(100vh); opacity:0; }
+            20% { opacity:1; }
+            100% { transform: translateY(-10vh); opacity:0; }
         }
 
-        /* ===== BACKGROUND ASLI (TIDAK DIUBAH) ===== */
-        .bg-wrapper {
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            background: radial-gradient(circle at 10% 20%, rgba(112, 0, 255, 0.15) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, rgba(0, 242, 255, 0.1) 0%, transparent 40%);
-            z-index: -1;
-        }
-
-        .blob {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: var(--accent-purple);
-            filter: blur(80px);
-            border-radius: 50%;
-            z-index: -1;
-            animation: move 20s infinite alternate;
-            opacity: 0.4;
-        }
-
-        @keyframes move {
-            from { transform: translate(-10%, -10%); }
-            to { transform: translate(20%, 20%); }
-        }
-
-        /* ===== SEMUA STYLE ASLI TETAP ===== */
+        /* ================= LOGIN CARD ================= */
         .login-container {
             height: 100vh;
             display: flex;
@@ -108,170 +70,150 @@
 
         .login-card {
             background: var(--glass);
-            backdrop-filter: blur(20px);
-            border-radius: 40px;
+            backdrop-filter: blur(25px);
+            border-radius: 35px;
             padding: 50px;
             width: 100%;
-            max-width: 450px;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+            max-width: 420px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
             position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        /* ================= ICON BUKU ================= */
+        .book-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+            color: var(--accent-neon);
+            animation: floatBook 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px var(--accent-neon));
+        }
+
+        @keyframes floatBook {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* ================= TITLE ================= */
         .brand-logo {
             font-size: 2.5rem;
-            font-weight: 700;
+            font-weight: 800;
             background: linear-gradient(to right, #fff, var(--accent-neon));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -2px;
-            margin-bottom: 10px;
         }
 
         .sub-text {
             color: #94a3b8;
-            font-size: 0.95rem;
-            margin-bottom: 40px;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
         }
 
+        /* ================= INPUT ================= */
         .input-group-modern {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             position: relative;
         }
 
         .input-group-modern input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 20px 15px 45px;
             border-radius: 15px;
-            padding: 15px 20px 15px 50px;
-            color: #fff;
-            transition: 0.4s;
-        }
-
-        .input-group-modern input:focus {
-            outline: none;
-            border-color: var(--accent-neon);
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: white;
         }
 
         .input-group-modern i {
             position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #64748b;
-            transition: 0.3s;
+            left: 15px;
+            top: 15px;
+            color: #94a3b8;
         }
 
-        .input-group-modern input:focus + i {
-            color: var(--accent-neon);
-        }
-
+        /* ================= BUTTON ================= */
         .btn-neon {
-            background: #fff;
-            color: #000;
-            border: none;
-            padding: 16px;
-            border-radius: 15px;
-            font-weight: 700;
             width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            padding: 15px;
+            border-radius: 15px;
+            border: none;
+            background: white;
+            font-weight: bold;
             transition: 0.3s;
         }
 
         .btn-neon:hover {
             background: var(--accent-neon);
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.5);
-            transform: translateY(-2px);
+            box-shadow: 0 0 30px var(--accent-neon);
         }
 
+        /* ================= REGISTER ================= */
         .register-text {
-            margin-top: 30px;
-            color: #64748b;
+            margin-top: 25px;
             font-size: 0.9rem;
+            color: #94a3b8;
         }
 
         .register-text a {
             color: var(--accent-neon);
             text-decoration: none;
-            font-weight: 600;
-        }
-
-        .card-decoration {
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-neon));
-            border-radius: 20px;
-            transform: rotate(15deg);
-
         }
     </style>
 </head>
+
 <body>
 
-<!-- TAMBAHAN (BACKGROUND ANIMASI) -->
 <div class="grid-bg"></div>
+
 <div class="particles" id="particles"></div>
 
-<!-- KODE ASLI KAMU -->
-<div class="bg-wrapper">
-    <div class="blob"></div>
-</div>
-
 <div class="container login-container">
-    <div class="login-card">
-        <div class="card-decoration"></div>
-        
-        <div class="text-center">
-            <h1 class="brand-logo">LIBEFWAY</h1>
-            <p class="sub-text">Selamat datang kembali, Penjelajah Ilmu.</p>
+    <div class="login-card text-center">
+
+        <!-- 🔥 ICON BUKU (TAMBAHAN TANPA MERUBAH STRUKTUR) -->
+        <div class="book-icon">
+            <i class="fas fa-book-open"></i>
         </div>
 
+        <h1 class="brand-logo">LIBEFWAY</h1>
+        <p class="sub-text">Pintu gerbang menuju galaksi pengetahuan.</p>
+
+        <!-- FORM LOGIN (TETAP ASLI) -->
         <form method="post" action="<?= base_url('index.php/auth/login') ?>">
+
             <div class="input-group-modern">
                 <input type="text" name="username" placeholder="Username" required autofocus>
-                <i class="fas fa-user-astronaut"></i>
+                <i class="fas fa-user"></i>
             </div>
 
             <div class="input-group-modern">
                 <input type="password" name="password" placeholder="Password" required>
-                <i class="fas fa-shield-halved"></i>
+                <i class="fas fa-lock"></i>
             </div>
 
             <button type="submit" class="btn-neon">
-                Masuk Sistem <i class="fas fa-arrow-right ms-2"></i>
+                MASUK <i class="fas fa-arrow-right ms-2"></i>
             </button>
         </form>
 
-        <div class="text-center register-text">
-            Belum punya akses? <a href="<?= base_url('index.php/auth/register') ?>">Daftar Sekarang</a>
-            <div class="mt-4 opacity-50" style="font-size: 0.7rem; letter-spacing: 2px;">
-                &copy; 2026 EFWAY CORE SYSTEM
-            </div>
+        <!-- REGISTER TIDAK DIHAPUS -->
+        <div class="register-text">
+            Belum punya akun?
+            <a href="<?= base_url('index.php/auth/register') ?>">Daftar</a>
         </div>
+
     </div>
 </div>
 
-<!-- SCRIPT PARTICLES -->
 <script>
+/* PARTICLES */
 const particles = document.getElementById('particles');
 
-for (let i = 0; i < 40; i++) {
-    let span = document.createElement('span');
-    let size = Math.random() * 4 + 2;
-
-    span.style.width = size + 'px';
-    span.style.height = size + 'px';
+for (let i = 0; i < 30; i++) {
+    const span = document.createElement('span');
     span.style.left = Math.random() * 100 + '%';
-    span.style.animationDuration = (Math.random() * 10 + 10) + 's';
-    span.style.animationDelay = Math.random() * 5 + 's';
-
+    span.style.animationDuration = (Math.random()*5+5)+'s';
+    span.style.animationDelay = Math.random()*5+'s';
     particles.appendChild(span);
 }
 </script>

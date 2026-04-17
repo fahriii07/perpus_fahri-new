@@ -6,7 +6,6 @@ class User extends CI_Controller {
     function __construct(){
         parent::__construct();
 
-        // Proteksi: Hanya role user yang bisa masuk
         if($this->session->userdata('role') != 'user'){
             redirect('index.php/auth');
         }
@@ -16,34 +15,93 @@ class User extends CI_Controller {
 
     // ================= DASHBOARD =================
     function index(){
-        $this->load->view('user/dashboard');
+
+        $user_id = $this->session->userdata('id');
+
+        // 🔥 HITUNG XP (dari buku yang sudah dikembalikan)
+        $this->db->where('user_id', $user_id);
+        $this->db->where('status', 'dikembalikan');
+        $total_selesai = $this->db->count_all_results('transaksi');
+
+        $xp = $total_selesai * 50;
+
+        // 🔥 LEVELING SYSTEM
+        if($xp >= 1000){
+            $level = 'Legend';
+        } elseif($xp >= 500){
+            $level = 'Elite';
+        } elseif($xp >= 200){
+            $level = 'Pro';
+        } else {
+            $level = 'Beginner';
+        }
+
+        // 🔥 PINJAMAN AKTIF
+        $this->db->where('user_id', $user_id);
+        $this->db->where('status', 'dipinjam');
+        $pinjaman_aktif = $this->db->count_all_results('transaksi');
+
+        $data = [
+            'xp' => $xp,
+            'level' => $level,
+            'pinjaman_aktif' => $pinjaman_aktif
+        ];
+
+        $this->load->view('user/dashboard', $data);
     }
 
-    // ================= PROFIL & AVATAR (UPDATED TABLE NAME) =================
+    // ================= DETAIL BUKU =================
+    function detail($id){
+        $data['buku'] = $this->db->get_where('buku', ['id' => $id])->row();
+
+        if(!$data['buku']){
+            show_404();
+        }
+
+        $this->load->view('user/detail_buku', $data);
+    }
+
+    // ================= PROFIL =================
     function update_profil(){
         $id_user = $this->session->userdata('id'); 
         $nama    = $this->input->post('nama');
-        $avatar  = $this->input->post('avatar');
+        
+        $config['upload_path']   = './uploads/';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size']      = 2048;
+        $config['file_name']     = 'user_'.time();
+
+        $this->load->library('upload', $config);
+
+        $avatar = $this->session->userdata('user_avatar');
+
+        if (!empty($_FILES['avatar']['name'])) {
+            if ($this->upload->do_upload('avatar')) {
+                $upload_data = $this->upload->data();
+                $avatar = base_url('uploads/') . $upload_data['file_name'];
+            } else {
+                $this->session->set_flashdata('error', $this->upload->display_errors());
+                redirect($_SERVER['HTTP_REFERER']);
+                return;
+            }
+        }
 
         $data = [
             'nama'   => $nama,
             'avatar' => $avatar
         ];
 
-        // MENGGUNAKAN TABEL 'users'
         $this->db->where('id', $id_user);
         $update = $this->db->update('users', $data);
 
         if($update){
-            // Update Session agar perubahan langsung terlihat di UI
             $this->session->set_userdata('nama', $nama);
             $this->session->set_userdata('user_avatar', $avatar);
-
-            $this->session->set_flashdata('success', 'Profil dan Avatar berhasil diperbarui!');
+            $this->session->set_flashdata('success', 'Profil berhasil diperbarui!');
         } else {
-            $this->session->set_flashdata('error', 'Gagal memperbarui profil.');
+            $this->session->set_flashdata('error', 'Gagal memperbarui database.');
         }
-
+        
         redirect($_SERVER['HTTP_REFERER']);
     }
 
@@ -60,7 +118,7 @@ class User extends CI_Controller {
         $this->load->view('user/buku', $data);
     }
 
-    // ================= RIWAYAT (FILTERED BY USER) =================
+    // ================= RIWAYAT =================
     function riwayat(){
         $user_id = $this->session->userdata('id');
 
@@ -79,8 +137,10 @@ class User extends CI_Controller {
         $this->load->view('user/riwayat', $data);
     }
 
-    // ================= PROSES PINJAM BUKU =================
+    // ================= PINJAM =================
     function pinjam($id){
+        $user_id = $this->session->userdata('id');
+
         $buku = $this->db->get_where('buku', ['id' => $id])->row();
 
         if(!$buku){
@@ -89,33 +149,44 @@ class User extends CI_Controller {
         }
 
         if($buku->stok <= 0){
-            $this->session->set_flashdata('error','Maaf, stok buku ini sedang habis!');
+            $this->session->set_flashdata('error','Stok buku habis!');
+            redirect('index.php/user/buku');
+        }
+
+        $cek = $this->db->where('user_id', $user_id)
+                        ->where_in('status', ['pending','dipinjam'])
+                        ->count_all_results('transaksi');
+
+        if($cek >= 3){
+            $this->session->set_flashdata('error','Maksimal 3 buku');
             redirect('index.php/user/buku');
         }
 
         $data = [
-            'user_id'        => $this->session->userdata('id'),
+            'user_id'        => $user_id,
             'buku_id'        => $id,
             'tanggal_pinjam' => date('Y-m-d'),
-            'status'         => 'pinjam',
+            'status'         => 'pending',
             'denda'          => 0
         ];
 
         $this->db->insert('transaksi', $data);
 
-        $this->db->set('stok', 'stok-1', FALSE);
-        $this->db->where('id', $id);
-        $this->db->update('buku');
+        $this->session->set_flashdata('success', 
+            'Pengajuan "' . $buku->judul . '" menunggu konfirmasi admin'
+        );
 
-        $this->session->set_flashdata('success', 'Buku "' . $buku->judul . '" berhasil dipinjam!');
         redirect('index.php/user/riwayat');
     }
 
-    // ================= PROSES KEMBALI BUKU =================
+    // ================= KEMBALI =================
     function kembali($id){
         $trx = $this->db->get_where('transaksi', ['id' => $id])->row();
 
-        if(!$trx){
+        if(!$trx) redirect('index.php/user/riwayat');
+
+        if($trx->status != 'dipinjam'){
+            $this->session->set_flashdata('error','Belum disetujui admin!');
             redirect('index.php/user/riwayat');
         }
 
@@ -131,21 +202,23 @@ class User extends CI_Controller {
 
         $this->db->where('id', $id);
         $this->db->update('transaksi', [
-            'status'          => 'kembali',
+            'status' => 'dikembalikan',
             'tanggal_kembali' => date('Y-m-d'),
-            'denda'           => $denda
+            'denda' => $denda
         ]);
 
         $this->db->set('stok', 'stok+1', FALSE);
         $this->db->where('id', $trx->buku_id);
         $this->db->update('buku');
 
-        if($denda > 0){
-            $this->session->set_flashdata('success', 'Buku dikembalikan. Terlambat ' . $terlambat . ' hari, denda: Rp ' . number_format($denda));
-        } else {
-            $this->session->set_flashdata('success', 'Terima kasih! Buku dikembalikan tepat waktu.');
-        }
-
         redirect('index.php/user/riwayat');
+    }
+
+    // ================= CETAK =================
+    public function cetak_kartu() {
+        $id_user = $this->session->userdata('id');
+        $data['user'] = $this->db->get_where('users', ['id' => $id_user])->row();
+        
+        $this->load->view('user/cetak_kartu', $data);
     }
 }

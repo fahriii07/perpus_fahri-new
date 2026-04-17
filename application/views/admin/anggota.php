@@ -109,7 +109,7 @@
         text-transform: uppercase;
     }
 
-    /* 7. Action Buttons (Dark Optimized) */
+    /* 7. Action Buttons */
     .btn-action {
         border: none;
         border-radius: 10px;
@@ -124,18 +124,165 @@
     .btn-detail-modern { background: rgba(14, 165, 233, 0.1); color: #0ea5e9; }
     .btn-edit-modern { background: rgba(202, 138, 4, 0.1); color: #ca8a04; }
     .btn-delete-modern { background: rgba(225, 29, 72, 0.1); color: #e11d48; }
+    .btn-print-modern { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
 
     .btn-action:hover { color: white !important; transform: translateY(-2px); }
     .btn-detail-modern:hover { background: #0ea5e9; }
     .btn-edit-modern:hover { background: #ca8a04; }
     .btn-delete-modern:hover { background: #e11d48; }
+    .btn-print-modern:hover { background: #8b5cf6; }
 
-    /* Alert Styling */
-    .alert-custom {
-        border-radius: 12px;
-        background: rgba(22, 101, 52, 0.1);
-        border: 1px solid rgba(22, 101, 52, 0.2);
-        color: #22c55e;
+    /* 8. Print Styling */
+    @media print {
+        body * { visibility: hidden; }
+        #printCardArea, #printCardArea * { visibility: visible; }
+        #printCardArea {
+            position: absolute;
+            left: 50%;
+            top: 50px;
+            transform: translateX(-50%);
+            width: 400px;
+            display: block !important;
+        }
+        .library-card { -webkit-print-color-adjust: exact; }
+    }
+
+    /* =========================================================
+       RE-DESIGNED ULTRA MODERN LIBRARY CARD
+       ========================================================= */
+    .library-card {
+        width: 400px;
+        height: 240px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #c026d3 100%);
+        position: relative;
+        overflow: hidden;
+        color: white;
+        box-shadow: 0 20px 40px rgba(79, 70, 229, 0.3);
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    /* Efek Kaca Transparan & Ornamen */
+    .card-glass-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(5px);
+        z-index: 1;
+    }
+
+    .card-ornament-1 {
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .card-ornament-2 {
+        position: absolute;
+        bottom: -60px;
+        left: -20px;
+        width: 220px;
+        height: 220px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .card-content-inner {
+        position: relative;
+        z-index: 2;
+        padding: 22px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-header-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .card-logo-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .card-logo-icon {
+        background: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #4f46e5;
+        font-size: 18px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-body-flex {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .card-photo-frame {
+        width: 90px;
+        height: 115px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        font-weight: 900;
+        text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .card-data-grid {
+        flex: 1;
+    }
+
+    .data-label {
+        font-size: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 2px;
+    }
+
+    .data-value {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        letter-spacing: 0.3px;
+    }
+
+    .card-footer-flex {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .id-tag {
+        background: rgba(0, 0, 0, 0.25);
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 1px;
     }
 </style>
 
@@ -188,7 +335,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="mb-1"><span class="badge badge-info-soft" style="background: rgba(99,102,241,0.15); color: #818cf8;"><?= $a->kelas ?: '-' ?></span></div>
+                                            <div class="mb-1"><span class="badge" style="background: rgba(99,102,241,0.15); color: #818cf8;"><?= $a->kelas ?: '-' ?></span></div>
                                             <div class="small text-muted font-italic"><?= $a->jurusan ?: '-' ?></div>
                                         </td>
                                         <td>
@@ -201,6 +348,12 @@
                                         </td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center" style="gap: 8px;">
+                                                <a href="javascript:void(0)" 
+                                                   onclick="generateCard('<?= addslashes($a->nama) ?>', '<?= $a->username ?>', '<?= $a->kelas ?>', '<?= $a->jurusan ?>')" 
+                                                   class="btn-action btn-print-modern" title="Cetak Kartu">
+                                                   <i class="fas fa-print"></i>
+                                                </a>
+                                                
                                                 <a href="<?= base_url('index.php/anggota/detail/'.$a->id) ?>" class="btn-action btn-detail-modern" title="Detail"><i class="fas fa-eye"></i></a>
                                                 <a href="<?= base_url('index.php/anggota/edit/'.$a->id) ?>" class="btn-action btn-edit-modern" title="Edit"><i class="fas fa-edit"></i></a>
                                                 <a href="<?= base_url('index.php/anggota/hapus/'.$a->id) ?>" class="btn-action btn-delete-modern" onclick="confirmDelete(event, this.href)" title="Hapus"><i class="fas fa-trash-alt"></i></a>
@@ -225,8 +378,79 @@
     </section>
 </div>
 
+<div id="printCardArea" style="display: none;">
+    <div class="library-card">
+        <div class="card-glass-overlay"></div>
+        <div class="card-ornament-1"></div>
+        <div class="card-ornament-2"></div>
+        
+        <div class="card-content-inner">
+            <div class="card-header-flex">
+                <div class="card-logo-box">
+                    <div class="card-logo-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 900; font-size: 15px; letter-spacing: 0.5px; line-height: 1;">LIB-DIGITAL</div>
+                        <div style="font-size: 7px; font-weight: 600; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px;">Membership Card</div>
+                    </div>
+                </div>
+                <div style="text-align: right; opacity: 0.6;">
+                    <i class="fas fa-wifi" style="font-size: 18px;"></i>
+                </div>
+            </div>
+
+            <div class="card-body-flex">
+                <div class="card-photo-frame" id="c-photo">A</div>
+                <div class="card-data-grid">
+                    <div class="data-label">Nama Lengkap</div>
+                    <div class="data-value" id="c-nama" style="font-size: 16px;">-</div>
+                    
+                    <div style="display: flex; gap: 20px;">
+                        <div>
+                            <div class="data-label">Kelas</div>
+                            <div class="data-value" id="c-kelas">-</div>
+                        </div>
+                        <div>
+                            <div class="data-label">Jurusan</div>
+                            <div class="data-value" id="c-jurusan">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer-flex">
+                <div>
+                    <div class="data-label">ID Anggota</div>
+                    <div class="id-tag" id="c-id">000000</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 6px; color: rgba(255,255,255,0.5); text-transform: uppercase;">Masa Berlaku</div>
+                    <div style="font-size: 9px; font-weight: 800;">SELAMANYA</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+// Fungsi Generate & Cetak Kartu
+function generateCard(nama, id, kelas, jurusan) {
+    // Isi data ke elemen kartu
+    document.getElementById('c-nama').innerText = nama.toUpperCase();
+    document.getElementById('c-id').innerText = id.toUpperCase();
+    document.getElementById('c-kelas').innerText = kelas || '-';
+    document.getElementById('c-jurusan').innerText = jurusan || '-';
+    document.getElementById('c-photo').innerText = nama.charAt(0).toUpperCase();
+
+    // Trigger Print
+    setTimeout(() => {
+        window.print();
+    }, 500);
+}
+
+// Fungsi Konfirmasi Hapus
 function confirmDelete(e, url) {
     const isDark = document.body.classList.contains('dark-mode');
     e.preventDefault();

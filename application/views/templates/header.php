@@ -340,9 +340,4 @@ document.addEventListener('click',function(e){
         document.getElementById('notifBox').style.display='none';
     }
 });
-
-/* realtime refresh */
-setInterval(function(){
-    location.reload();
-},15000);
 </script>

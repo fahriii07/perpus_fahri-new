@@ -234,47 +234,7 @@ body.dark-mode {
         </div>
     </div>
 </div>
-
-<div class="chart-card mb-4">
-    <div class="d-flex align-items-center mb-4">
-        <div style="font-size: 1.5rem; margin-right: 12px;">🔥</div>
-        <h5 class="mb-0" style="font-weight: 700; color: var(--text-title);">Buku Terpopuler</h5>
-    </div>
-
-    <div class="table-responsive">
-        <table class="table-modern">
-            <thead>
-                <tr>
-                    <th>Judul Buku</th>
-                    <th class="text-right">Total Pinjam</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if(!empty($buku_populer)): ?>
-                    <?php foreach($buku_populer as $b): ?>
-                    <tr>
-                        <td>
-                            <div class="book-title-wrapper">
-                                <div class="book-icon-box">
-                                    <i class="fas fa-book"></i>
-                                </div>
-                                <span style="font-weight: 600;"><?= $b->judul ?></span>
-                            </div>
-                        </td>
-                        <td class="text-right">
-                            <span class="total-badge"><?= $b->total ?> Pinjam</span>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="2" class="text-center py-4" style="color: var(--text-body);">Belum ada data peminjaman</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
+`
 
 </div>
 </section>

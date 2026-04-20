@@ -21,6 +21,11 @@ class Admin extends CI_Controller {
 
         $data['total_transaksi'] = $this->db->count_all('transaksi');
 
+        // jumlah notif baru admin
+        $this->db->where('role','admin');
+        $this->db->where('status','baru');
+        $data['notif_baru'] = $this->db->count_all_results('notifikasi');
+
         $this->db->select('transaksi.*, users.nama as nama_user, buku.judul');
         $this->db->from('transaksi');
         $this->db->join('users','users.id = transaksi.user_id','left');
@@ -47,10 +52,10 @@ class Admin extends CI_Controller {
 
         if(empty($data['chart_label'])){
             $data['chart_label'] = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"];
-            $data['chart_data'] = [0,0,0,0,0,0,0];
+            $data['chart_data']  = [0,0,0,0,0,0,0];
         }
 
-        $data['chart_data_buku'] = [2,4,1,0,8,3,5];
+        $data['chart_data_buku']    = [2,4,1,0,8,3,5];
         $data['chart_data_anggota'] = [1,2,5,2,3,1,4];
 
         $data['buku_populer'] = $this->db->query("
@@ -71,7 +76,7 @@ class Admin extends CI_Controller {
         $this->load->view('admin/dashboard', $data);
     }
 
-    // ================= TRANSAKSI =================
+    // ================= LOG TRANSAKSI =================
     function transaksi(){
 
         $status_filter = $this->input->get('status');
@@ -91,14 +96,15 @@ class Admin extends CI_Controller {
         $this->load->view('admin/transaksi', $data);
     }
 
-    // ================= KONFIRMASI =================
-    public function konfirmasi()
-    {
+    // ================= HALAMAN KONFIRMASI =================
+    function konfirmasi(){
+
         $this->db->select('transaksi.*, users.nama as nama_user, buku.judul');
         $this->db->from('transaksi');
-        $this->db->join('users', 'users.id = transaksi.user_id');
-        $this->db->join('buku', 'buku.id = transaksi.buku_id');
-        $this->db->where('transaksi.status', 'pending');
+        $this->db->join('users','users.id = transaksi.user_id','left');
+        $this->db->join('buku','buku.id = transaksi.buku_id','left');
+        $this->db->where('transaksi.status', 'menunggu');
+        $this->db->order_by('transaksi.id','DESC');
 
         $data['transaksi'] = $this->db->get()->result();
 
@@ -106,100 +112,130 @@ class Admin extends CI_Controller {
     }
 
     // ================= SETUJUI =================
-    public function setujui($id)
-{
-    $trx = $this->db->get_where('transaksi', ['id' => $id])->row();
+    function setujui($id){
 
-    if (!$trx) {
-        show_404();
-        return;
-    }
+        $trx = $this->db->get_where('transaksi', ['id'=>$id])->row();
 
-    // ❗ CEK jika sudah diproses
-    if ($trx->status != 'menunggu') {
-        $this->session->set_flashdata('error', 'Transaksi sudah diproses');
-        redirect('admin/konfirmasi');
-        return;
-    }
+        if(!$trx){
+            show_404();
+            return;
+        }
 
-    // ❗ CEK stok buku
-    $buku = $this->db->get_where('buku', ['id' => $trx->buku_id])->row();
+        if($trx->status != 'menunggu'){
+            $this->session->set_flashdata('error','Status transaksi tidak valid');
+            redirect('index.php/admin/konfirmasi');
+            return;
+        }
 
-    if (!$buku || $buku->stok <= 0) {
-        $this->session->set_flashdata('error', 'Stok buku habis');
-        redirect('admin/konfirmasi');
-        return;
-    }
+        $buku = $this->db->get_where('buku', ['id'=>$trx->buku_id])->row();
 
-    // 🔥 TRANSACTION START
-    $this->db->trans_start();
+        if(!$buku || $buku->stok <= 0){
+            $this->session->set_flashdata('error','Stok buku habis');
+            redirect('index.php/admin/konfirmasi');
+            return;
+        }
 
-    // update transaksi
-    $this->db->where('id', $id);
-    $this->db->update('transaksi', [
-        'status' => 'dipinjam',
-        'tanggal_konfirmasi' => date('Y-m-d H:i:s'),
-        'admin_id' => $this->session->userdata('id')
-    ]);
+        $this->db->trans_start();
 
-    // update stok
-    $this->db->set('stok', 'stok-1', FALSE);
-    $this->db->where('id', $trx->buku_id);
-    $this->db->update('buku');
-
-    $this->db->trans_complete();
-
-    $this->session->set_flashdata('success', 'Peminjaman disetujui');
-    redirect('admin/konfirmasi');
-}
-
-    // ================= TOLAK =================
-    public function tolak($id)
-{
-    $trx = $this->db->get_where('transaksi', ['id' => $id])->row();
-
-    if (!$trx) {
-        show_404();
-        return;
-    }
-
-    if ($trx->status != 'menunggu') {
-        $this->session->set_flashdata('error', 'Transaksi sudah diproses');
-        redirect('admin/konfirmasi');
-        return;
-    }
-
-    $this->db->where('id', $id);
-    $this->db->update('transaksi', [
-        'status' => 'ditolak',
-        'tanggal_konfirmasi' => date('Y-m-d H:i:s'),
-        'admin_id' => $this->session->userdata('id')
-    ]);
-
-    $this->session->set_flashdata('success', 'Peminjaman ditolak');
-
-    redirect('admin/konfirmasi');
-}
-
-    // ================= KEMBALIKAN =================
-    public function kembalikan($id)
-    {
-        $trx = $this->db->get_where('transaksi', ['id' => $id])->row();
-
-        if (!$trx) show_404();
-
-        $this->db->where('id', $id);
-        $this->db->update('transaksi', [
-            'status' => 'dikembalikan',
-            'tanggal_kembali' => date('Y-m-d')
+        // update transaksi
+        $this->db->where('id',$id);
+        $this->db->update('transaksi',[
+            'status' => 'dipinjam'
         ]);
 
-        $this->db->set('stok', 'stok+1', FALSE);
-        $this->db->where('id', $trx->buku_id);
+        // kurangi stok
+        $this->db->set('stok','stok-1',FALSE);
+        $this->db->where('id',$trx->buku_id);
         $this->db->update('buku');
 
-        $this->session->set_flashdata('success', 'Buku berhasil dikembalikan');
-        redirect('admin/transaksi');
+        // notif ke user
+        $this->db->insert('notifikasi',[
+            'user_id' => $trx->user_id,
+            'role'    => 'user',
+            'judul'   => 'Peminjaman Disetujui',
+            'pesan'   => 'Pengajuan peminjaman buku Anda telah disetujui admin.',
+            'status'  => 'baru'
+        ]);
+
+        $this->db->trans_complete();
+
+        $this->session->set_flashdata('success','Peminjaman berhasil disetujui');
+        redirect('index.php/admin/konfirmasi');
+    }
+
+    // ================= TOLAK =================
+    function tolak($id){
+
+        $trx = $this->db->get_where('transaksi', ['id'=>$id])->row();
+
+        if(!$trx){
+            show_404();
+            return;
+        }
+
+        $this->db->trans_start();
+
+        $this->db->where('id',$id);
+        $this->db->update('transaksi',[
+            'status' => 'ditolak'
+        ]);
+
+        // notif ke user
+        $this->db->insert('notifikasi',[
+            'user_id' => $trx->user_id,
+            'role'    => 'user',
+            'judul'   => 'Peminjaman Ditolak',
+            'pesan'   => 'Maaf, pengajuan peminjaman Anda ditolak admin.',
+            'status'  => 'baru'
+        ]);
+
+        $this->db->trans_complete();
+
+        $this->session->set_flashdata('success','Permintaan berhasil ditolak');
+        redirect('index.php/admin/konfirmasi');
+    }
+
+    // ================= KEMBALIKAN =================
+    function kembalikan($id){
+
+        $trx = $this->db->get_where('transaksi', ['id'=>$id])->row();
+
+        if(!$trx){
+            show_404();
+            return;
+        }
+
+        if($trx->status != 'dipinjam'){
+            $this->session->set_flashdata('error','Buku tidak bisa dikembalikan');
+            redirect('index.php/admin/transaksi');
+            return;
+        }
+
+        $this->db->trans_start();
+
+        $this->db->where('id',$id);
+        $this->db->update('transaksi',[
+            'status'           => 'dikembalikan',
+            'tanggal_kembali'  => date('Y-m-d')
+        ]);
+
+        $this->db->set('stok','stok+1',FALSE);
+        $this->db->where('id',$trx->buku_id);
+        $this->db->update('buku');
+
+        // notif ke user
+        $this->db->insert('notifikasi',[
+            'user_id' => $trx->user_id,
+            'role'    => 'user',
+            'judul'   => 'Buku Dikembalikan',
+            'pesan'   => 'Status buku Anda telah dikembalikan.',
+            'status'  => 'baru'
+        ]);
+
+        $this->db->trans_complete();
+
+        $this->session->set_flashdata('success','Buku berhasil dikembalikan');
+        redirect('index.php/admin/transaksi');
     }
 
     // ================= DETAIL =================
@@ -213,7 +249,9 @@ class Admin extends CI_Controller {
 
         $data['trx'] = $this->db->get()->row();
 
-        if(!$data['trx']) show_404();
+        if(!$data['trx']){
+            show_404();
+        }
 
         $this->load->view('admin/detail_transaksi', $data);
     }
@@ -224,6 +262,7 @@ class Admin extends CI_Controller {
         $trx = $this->db->get_where('transaksi',['id'=>$id])->row();
 
         if($trx){
+
             if($trx->status == 'dipinjam'){
                 $this->db->set('stok','stok+1',FALSE);
                 $this->db->where('id',$trx->buku_id);
@@ -234,6 +273,27 @@ class Admin extends CI_Controller {
         }
 
         $this->session->set_flashdata('success','Transaksi berhasil dihapus');
-        redirect('admin/transaksi');
+        redirect('index.php/admin/transaksi');
+    }
+
+    // ================= DATA NOTIF ADMIN (AJAX) =================
+    function get_notifikasi(){
+
+        $this->db->where('role','admin');
+        $this->db->order_by('id','DESC');
+        $this->db->limit(10);
+
+        echo json_encode(
+            $this->db->get('notifikasi')->result()
+        );
+    }
+
+    // ================= BACA NOTIF ADMIN =================
+    function baca_notifikasi(){
+
+        $this->db->where('role','admin');
+        $this->db->update('notifikasi',[
+            'status' => 'dibaca'
+        ]);
     }
 }

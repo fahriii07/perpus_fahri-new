@@ -2,189 +2,210 @@
 <?php $this->load->view('templates/sidebar_admin'); ?>
 
 <style>
-    /* 1. Theme Variables */
-    :root {
-        --bg-body: #f8fafc;
-        --bg-card: #ffffff;
-        --text-main: #1e293b;
-        --text-muted: #64748b;
-        --input-bg: #ffffff;
-        --input-border: #e2e8f0;
-        --form-label: #475569;
-        --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-    }
+/* --- Theme Variables --- */
+:root {
+    --bg-body: #f8fafc;
+    --bg-card: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --input-bg: #ffffff;
+    --input-border: #e2e8f0;
+    --form-label: #475569;
+    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    --shadow: 0 15px 35px rgba(0, 0, 0, .08);
+}
 
-    body.dark-mode {
-        --bg-body: #0f172a;
-        --bg-card: #1e293b;
-        --text-main: #f1f5f9;
-        --text-muted: #94a3b8;
-        --input-bg: #1e293b;
-        --input-border: #334155;
-        --form-label: #cbd5e1;
-    }
+body.dark-mode {
+    --bg-body: #0f172a;
+    --bg-card: #1e293b;
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --input-bg: #0f172a;
+    --input-border: #334155;
+    --form-label: #cbd5e1;
+    --shadow: 0 18px 35px rgba(0, 0, 0, .35);
+}
 
-    /* 2. Background Page */
-    .content-wrapper {
-        background: var(--bg-body) !important;
-        background-image: 
-            radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
-            radial-gradient(at 0% 100%, rgba(168, 85, 247, 0.03) 0px, transparent 50%) !important;
-        min-height: 100vh;
-        padding-top: 25px;
-        transition: all 0.3s ease;
-    }
+.content-wrapper {
+    background: var(--bg-body) !important;
+    background-image:
+        radial-gradient(at 100% 0%, rgba(99, 102, 241, .08) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(168, 85, 247, .06) 0px, transparent 50%) !important;
+    min-height: 100vh;
+    padding: 25px 0;
+    transition: .3s ease;
+}
 
-    /* 3. Card Styling */
-    .card-custom {
-        border: none;
-        border-radius: 20px;
-        background: var(--bg-card);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        transition: background 0.3s ease;
-    }
+.page-title { font-weight: 800; color: var(--text-main); letter-spacing: -.5px; }
 
-    .page-title {
-        font-weight: 700;
-        color: var(--text-main);
-        letter-spacing: -0.5px;
-    }
+.card-custom {
+    background: var(--bg-card);
+    border: none;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
 
-    /* 4. Form Styling */
-    .form-group label {
-        font-weight: 600;
-        color: var(--form-label);
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-    }
+.card-header-modern {
+    padding: 22px 28px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, .10), rgba(168, 85, 247, .08));
+    border-bottom: 1px solid var(--input-border);
+}
 
-    .form-control {
-        background-color: var(--input-bg);
-        color: var(--text-main);
-        border-radius: 12px;
-        padding: 12px 15px;
-        border: 1px solid var(--input-border);
-        transition: all 0.3s ease;
-    }
+.card-header-modern h5 { margin: 0; font-weight: 800; color: var(--text-main); }
 
-    .form-control:focus {
-        background-color: var(--input-bg);
-        color: var(--text-main);
-        border-color: #6366f1;
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-    }
+.form-group label { font-weight: 700; color: var(--form-label); margin-bottom: 10px; display: block; font-size: .92rem; }
 
-    /* 5. Button Styling */
-    .btn-save {
-        background: var(--primary-gradient);
-        border: none;
-        border-radius: 12px;
-        padding: 10px 25px;
-        font-weight: 600;
-        color: white !important;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-    }
+.input-icon-wrapper { position: relative; }
+.input-icon-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #6366f1; z-index: 2; }
+.input-icon-wrapper .form-control { padding-left: 46px; }
 
-    .btn-save:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
-    }
+.form-control {
+    background: var(--input-bg) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--input-border) !important;
+    border-radius: 14px;
+    min-height: 50px;
+}
 
-    .btn-back {
-        background: var(--input-border);
-        color: var(--text-muted);
-        border: none;
-        border-radius: 12px;
-        padding: 10px 25px;
-        font-weight: 600;
-        transition: all 0.3s;
-    }
+.upload-box {
+    border: 2px dashed var(--input-border);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    background: rgba(99, 102, 241, .03);
+}
 
-    .btn-back:hover {
-        background: #64748b;
-        color: white;
-    }
+.preview-cover {
+    width: 140px;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 16px;
+    display: none;
+    margin: 15px auto 0;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .12);
+}
 
-    /* Icon Input */
-    .input-icon-wrapper {
-        position: relative;
-    }
-    
-    .input-icon-wrapper i {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #6366f1;
-    }
+.btn-save {
+    background: var(--primary-gradient);
+    color: #fff !important;
+    border: none;
+    border-radius: 14px;
+    padding: 11px 24px;
+    font-weight: 700;
+    box-shadow: 0 10px 24px rgba(99, 102, 241, .25);
+    transition: .25s;
+}
 
-    .input-icon-wrapper .form-control {
-        padding-left: 45px;
-    }
+.btn-save:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 16px 28px rgba(99, 102, 241, .35); }
+.btn-save:disabled { opacity: 0.7; cursor: not-allowed; }
+
+.btn-back {
+    background: var(--input-border);
+    color: var(--text-muted) !important;
+    border-radius: 14px;
+    padding: 11px 24px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
 </style>
 
 <div class="content-wrapper">
-    <section class="content pt-3">
+    <section class="content">
         <div class="container-fluid">
 
             <div class="mb-4">
-                <h3 class="page-title mb-0">➕ Tambah Buku Baru</h3>
-                <p class="text-muted small">Lengkapi formulir di bawah untuk menambah koleksi perpustakaan.</p>
+                <h3 class="page-title mb-1">➕ Tambah Buku Baru</h3>
+                <p class="text-muted small">Lengkapi data buku dan upload cover koleksi perpustakaan.</p>
             </div>
 
             <div class="row justify-content-center">
-                <div class="col-lg-7">
+                <div class="col-lg-8">
                     <div class="card card-custom">
-                        <div class="card-body p-4">
+                        <div class="card-header-modern">
+                            <h5><i class="fas fa-book-medical mr-2"></i> Form Input Buku</h5>
+                        </div>
 
-                            <form method="post" action="<?= base_url('index.php/buku/simpan') ?>">
+                        <div class="card-body">
+                            <form method="post" 
+                                  action="<?= base_url('index.php/buku/simpan') ?>" 
+                                  enctype="multipart/form-data" 
+                                  autocomplete="off" 
+                                  id="formBuku">
 
-                                <div class="form-group mb-4">
+                                <div class="form-group">
                                     <label>Judul Buku</label>
                                     <div class="input-icon-wrapper">
                                         <i class="fas fa-book"></i>
-                                        <input type="text" name="judul" class="form-control" required placeholder="Masukkan judul buku">
+                                        <input type="text" name="judul" class="form-control" placeholder="Masukkan judul buku" required value="<?= set_value('judul') ?>">
                                     </div>
                                 </div>
 
-                                <div class="form-group mb-4">
+                                <div class="form-group">
                                     <label>Pengarang</label>
                                     <div class="input-icon-wrapper">
                                         <i class="fas fa-user-edit"></i>
-                                        <input type="text" name="pengarang" class="form-control" required placeholder="Nama penulis/pengarang">
+                                        <input type="text" name="pengarang" class="form-control" placeholder="Nama penulis" required value="<?= set_value('pengarang') ?>">
                                     </div>
                                 </div>
 
-                                <div class="form-group mb-4">
+                                <div class="form-group">
                                     <label>Stok Inventaris</label>
                                     <div class="input-icon-wrapper">
                                         <i class="fas fa-cubes"></i>
-                                        <input type="number" name="stok" class="form-control" required placeholder="0" min="0">
+                                        <input type="number" name="stok" class="form-control" placeholder="0" min="0" required value="<?= set_value('stok') ?>">
                                     </div>
-                                    <small class="text-muted mt-2 d-block">Jumlah buku yang tersedia saat ini.</small>
                                 </div>
 
-                                <hr class="my-4" style="border-top: 1px dashed var(--input-border);">
+                                <div class="form-group">
+                                    <label>Cover Buku</label>
+                                    <div class="upload-box">
+                                        <div class="font-weight-bold mb-2">Upload Cover Buku</div>
+                                        <small class="d-block mb-3">JPG / PNG / WEBP (Maks 2MB)</small>
+                                        <input type="file" name="cover" id="coverInput" class="form-control" accept=".jpg,.jpeg,.png,.webp">
+                                        <img id="previewCover" class="preview-cover">
+                                    </div>
+                                </div>
 
-                                <div class="d-flex justify-content-between">
-                                    <a href="<?= base_url('index.php/buku') ?>" class="btn-back text-decoration-none">
-                                        <i class="fas fa-arrow-left mr-2"></i> Kembali
+                                <hr class="my-4">
+
+                                <div class="d-flex justify-content-between flex-wrap" style="gap:12px;">
+                                    <a href="<?= base_url('index.php/buku') ?>" class="btn-back">
+                                        <i class="fas fa-arrow-left"></i> Kembali
                                     </a>
-                                    <button type="submit" class="btn-save">
-                                        <i class="fas fa-save mr-2"></i> Simpan Buku
+
+                                    <button type="submit" id="btnSave" class="btn-save">
+                                        <i class="fas fa-save"></i> Simpan Buku
                                     </button>
                                 </div>
-
                             </form>
-
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 </div>
+
+<script>
+    // Handle Preview Gambar
+    document.getElementById('coverInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('previewCover');
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+        }
+    });
+
+    // Handle Submit Form (Mencegah double click & reload error)
+    document.getElementById('formBuku').addEventListener('submit', function(e) {
+        const btn = document.getElementById('btnSave');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+    });
+</script>
 
 <?php $this->load->view('templates/footer'); ?>

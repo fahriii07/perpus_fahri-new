@@ -133,6 +133,13 @@
                         <p>Kelola Transaksi</p>
                     </a>
                 </li>
+
+                <li class="nav-item">
+<a href="<?= base_url('index.php/admin/konfirmasi') ?>" class="nav-link">
+<i class="nav-icon fas fa-clock"></i>
+<p>Permintaan Pinjam</p>
+</a>
+</li>
                 
                 <li class="nav-item">
                     <a href="<?= base_url('index.php/laporan') ?>" 
